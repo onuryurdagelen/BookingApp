@@ -1,0 +1,58 @@
+﻿
+@model List<ProductViewModel>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+	int index = 1;
+}
+
+<h4 class="page-title">Products</h4>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				@if(Model.Count > 0)
+				{
+					<table class="table table-striped mt-3">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Name</th>
+								<th scope="col">Price</th>
+								<th scope="col">State</th>
+								<th scope="col">Remove</th>
+								<th scope="col">Update</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var product in Model)
+							{
+								<tr data-id="@product.Id">
+									<td>@(index++)</td>
+									<td>@product.Name</td>
+									<td>@product.Price</td>
+									<td>@(product.IsActive ? "Active" : "Passive")</td>
+									<td align="justify" width="200">
+										<a class="btn btn-outline-danger btn-sm" type="button" asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id"><i class="la la-times-circle"></i> Delete</a>
+									</td>
+									<td align="justify" width="200">
+										<a class=" btn btn-outline-warning btn-sm" type="button" asp-controller="Product" asp-action="Update" asp-route-id="@product.Id"><i class="la la-pencil-square"></i> Update</a>
+									</td>
+								</tr>
+							}
+
+						</tbody>
+					</table>
+					
+				}
+			
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<a class="w-100 btn btn-outline-primary" type="button" asp-controller="Product" asp-action="Create"><i class="la la-plus-circle"></i> Create Product</a>
+	</div>
+
+</div>
+

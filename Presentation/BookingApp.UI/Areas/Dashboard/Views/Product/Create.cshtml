@@ -1,0 +1,53 @@
+﻿@model CreateProductViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Create Product</div>
+            </div>
+            <div class="card-body">
+                <form asp-controller="Product" asp-action="Create" method="post">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImageLink" class="control-label"></label>
+                        <input asp-for="ImageLink" class="form-control" />
+                        <span asp-validation-for="ImageLink" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IngredientsText" class="control-label"></label>
+                        <textarea class="form-control" asp-for="IngredientsText" rows="3">
+                                                </textarea>
+                        <span asp-validation-for="IngredientsText" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input type="number" asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Categories" class="control-label"></label>
+                        @Html.DropDownListFor(x => x.CategoryId,Model.Categories,new {@class = "form-control"})
+                    </div>
+                    <!-- Add other form fields as needed -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

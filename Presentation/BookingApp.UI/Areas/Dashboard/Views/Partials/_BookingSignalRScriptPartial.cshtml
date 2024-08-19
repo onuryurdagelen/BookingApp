@@ -1,0 +1,83 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/bookingHub")
+			.build();
+
+
+		connection.start()
+			.then(() => {
+				console.log("Connected...");
+				setInterval(() => {
+					connection.invoke("SendBookingList");
+				}, 2000)
+
+			})
+			.catch(err => console.error(err.toString()));
+
+		connection.on("ReceiveBookingList", (data) => {
+			let tableHtml = '';
+			$.each(data, (index, item) => {
+				console.log(data)
+				let statusBadge = '';
+				switch (item.status) {
+					case 0: // Pending
+						statusBadge = '<span class="badge badge-info">Pending</span>';
+						break;
+					case 1: // Approved
+						statusBadge = '<span class="badge badge-success">Approved</span>';
+						break;
+					case 2: // Cancelled
+						statusBadge = '<span class="badge badge-danger">Cancelled</span>';
+						break;
+					default:
+						statusBadge = '<span class="badge badge-info">Pending</span>';
+				}
+			});
+			// console.log(data)
+			tableHtml = `
+										<thead class="table table-striped mt-3">
+												<tr>
+													<th scope="col">#</th>
+													<th scope="col">Email Address</th>
+													<th scope="col">Phone Number</th>
+													<th scope="col">Date</th>
+													<th scope="col">Time</th>
+													<th scope="col">Guest Count</th>
+													<th scope="col">Status</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+												<tbody>
+							`;
+			$.each(data, (index, item) => {
+				let status = item.status;
+				index += 1;
+				tableHtml += `
+									<tr data-id="${item.id}">
+														<td>${index}</td>
+														<td>${item.emailAddress}</td>
+														<td>${item.phone}</td>
+														<td>${item.dateTime}</td>
+														<td>${item.time}</td>
+														<td align="center">${item.guestCount}</td>
+														<td>${statusBadge}</td>
+														<td>
+															<a class="btn btn-outline-danger btn-sm mr-2" type="button" href="/Dashboard/Booking/ChangeStatus?id=${item.id}&status=${item.status}" ><i class="la la-times-circle"></i> Cancel</a>
+																<a class=" btn btn-outline-success btn-sm" type="button" href="/Dashboard/Booking/ChangeStatus?id=${item.id}&status=${item.status}"><i class="la la-pencil-square"></i> Approve</a>
+														</td>
+													</tr>
+								`;
+			console.log(tableHtml);
+			});
+			tableHtml += "</tbody></table>";
+
+		});
+
+  })
+
+
+</script>
+

@@ -1,0 +1,83 @@
+﻿@using BookingApp.Domain.Entities
+
+@model List<BookingViewModel>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+	int index = 0;
+}
+
+<h4 class="page-title">Bookings</h4>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				@if (Model.Count > 0)
+				{
+					<table class="table table-striped mt-3" id="bookingTbl">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Email Address</th>
+								<th scope="col">Phone Number</th>
+								<th scope="col">Date</th>
+								<th scope="col">Time</th>
+								<th scope="col">Guest Count</th>
+								<th scope="col">Status</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var booking in Model)
+							{
+								<tr data-id="@booking.Id">
+									<td>@(++index)</td>
+									<td>@booking.EmailAddress</td>
+									<td>@booking.Phone</td>
+									<td>@booking.DateTime.ToShortDateString()</td>
+									<td>@booking.Time</td>
+									<td align="center">@booking.GuestCount</td>
+									<td>
+										@{
+											switch (booking.Status)
+											{
+												case BookingApp.Domain.Entities.BookingStatus.Pending:
+													<span class="badge badge-info">Pending</span>
+													break;
+												case BookingApp.Domain.Entities.BookingStatus.Approved:
+													<span class="badge badge-success">Approved</span>
+													break;
+												case BookingApp.Domain.Entities.BookingStatus.Cancelled:
+													<span class="badge badge-danger">Cancelled</span>
+													break;
+												default:
+													<span class="badge badge-info">Pending</span>
+													break;
+											}
+										}
+									</td>
+									<td>
+										<a class="btn btn-outline-danger btn-sm mr-2" type="button" href="/Dashboard/Booking/ChangeStatus?id=@booking.Id&status=@BookingStatus.Cancelled" ><i class="la la-times-circle"></i> Cancel</a>
+										<a class=" btn btn-outline-success btn-sm" type="button" href="/Dashboard/Booking/ChangeStatus?id=@booking.Id&status=@BookingStatus.Approved"><i class="la la-pencil-square"></i> Approve</a>
+									</td>
+								</tr>
+							}
+							
+							
+						</tbody>
+					</table>
+				}
+				
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<button class="w-100 btn btn-outline-primary"><i class="la la-plus-circle"></i> Create Booking</button>
+	</div>
+
+</div>
+
+@section Scripts {
+	<partial name="~/Areas/Dashboard/Views/Partials/_BookingSignalRScriptPartial.cshtml" />
+}

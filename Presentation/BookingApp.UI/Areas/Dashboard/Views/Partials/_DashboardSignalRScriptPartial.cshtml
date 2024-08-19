@@ -1,0 +1,43 @@
+﻿
+<script type="text/javascript">
+
+    function InitializeModulesCount(connection) {
+        connection.invoke("SendCurrentCategoryCount");
+        connection.invoke("SendCurrentProductCount");
+        connection.invoke("SendCurrentBookingCount");
+
+        connection.on("GetCurrentCategoryCount", (count) => {
+            console.log("Count: " + count);
+            $("#category-count").text(count);
+        });
+
+        connection.on("GetCurrentProductCount", (count) => {
+            console.log("Count: " + count);
+            $("#product-count").text(count);
+        });
+
+        connection.on("GetCurrentBookingCount", (count) => {
+            console.log("Count: " + count);
+            $("#booking-count").text(count);
+        });
+    }
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/dashboardHub")
+        .build();
+
+
+    connection.start()
+        .then(() => {
+
+            console.log("Connected...");
+
+            InitializeModulesCount(connection);
+
+        })
+    .catch(err => console.error(err.toString()));
+
+   
+
+
+</script>

@@ -1,0 +1,30 @@
+﻿@model CategoryUpdateViewModel
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <form asp-controller="Category" asp-action="Update" method="post">
+                    <div class="form-group">
+                        <input type="hidden" asp-for="Id"/>
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <!-- Add other form fields as needed -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+

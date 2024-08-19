@@ -1,0 +1,67 @@
+﻿@model List<CategoryViewModel>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+	int index = 1;
+}
+
+<h4 class="page-title">Categories</h4>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+
+
+				@if(Model.Count > 0)
+				{
+					<table class="table table-striped mt-3">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th  scope="col">Name</th>
+								<th scope="col">Remove</th>
+								<th scope="col">Update</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var category in Model)
+							{
+								<tr>
+									<td data-id="@category.Id">@(index++)</td>
+									<td >@category.Name</td>
+									<td align="justify" width="200">
+										<a class="btn btn-outline-danger btn-sm" type="button" asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id"><i class="la la-times-circle"></i> Delete</a>
+									</td>
+									<td align="justify" width="200">
+										<a class=" btn btn-outline-warning btn-sm" type="button" asp-controller="Category" asp-action="Update" asp-route-id="@category.Id"><i class="la la-pencil-square"></i> Update</a>
+										</td>
+								
+								</tr>
+							}
+							
+
+						</tbody>
+					</table>
+				}
+
+				
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<a class="w-100 btn btn-outline-primary" type="button" asp-controller="Category" asp-action="Create"><i class="la la-plus-circle"></i> Create Category</a>
+	</div>
+
+</div>
+
+
+
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		
+	</script>
+}
