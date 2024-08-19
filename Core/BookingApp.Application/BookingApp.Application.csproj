@@ -12,7 +12,7 @@
 	  <PackageReference Include="MediatR" Version="12.4.0" />
 	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.31" />
 	  <PackageReference Include="SendGrid" Version="9.29.3" />
   </ItemGroup>
 
@@ -23,6 +23,8 @@
   <ItemGroup>
     <Folder Include="Commands\BookingC\Delete\" />
     <Folder Include="Commands\BookingC\Update\" />
+    <Folder Include="Rules\CategoryR\" />
+    <Folder Include="Rules\BookingR\" />
   </ItemGroup>
 
 </Project>

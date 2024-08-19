@@ -1,5 +1,8 @@
 ﻿using BookingApp.Application.Abstracts.ProductA;
+using BookingApp.Application.Rules.ProductR;
+using BookingApp.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +14,25 @@ namespace BookingApp.Application.Commands.ProductC.Create
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommandRequest, CreateProductCommandResponse>
     {
         private readonly IProductWriteRepository _productWriteRepository;
+        private readonly IProductReadRepository _productReadRepository;
+        private readonly ProductRules _productRules;
+		public CreateProductCommandHandler(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, ProductRules productRules)
+		{
+			_productWriteRepository = productWriteRepository;
+			_productReadRepository = productReadRepository;
+			_productRules = productRules;
+		}
 
-        public CreateProductCommandHandler(IProductWriteRepository productWriteRepository)
+		public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
-            _productWriteRepository = productWriteRepository;
-        }
 
-        public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
-        {
-          bool result = await _productWriteRepository.AddAsync(new Domain.Entities.Product 
+            IList<Product> products = await _productReadRepository.GetAll().ToListAsync();
+
+			await _productRules.ProductTitleMustNotBeSame(request.Name, products);
+
+
+
+			bool result = await _productWriteRepository.AddAsync(new Domain.Entities.Product 
            {    Name = request.Name,
                IsActive = true,
                IsDeleted = false,

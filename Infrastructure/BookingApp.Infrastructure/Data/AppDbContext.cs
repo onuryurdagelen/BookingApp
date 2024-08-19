@@ -1,4 +1,5 @@
 ﻿using BookingApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookingApp.Infrastructure.Data
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext:IdentityDbContext<User,Role,Guid>
     {
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Product> Products { get; set; }

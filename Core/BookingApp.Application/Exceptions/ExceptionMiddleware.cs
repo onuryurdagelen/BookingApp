@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using BookingApp.Application.Rules;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using SendGrid.Helpers.Errors.Model;
 using System;
@@ -39,9 +41,7 @@ namespace BookingApp.Application.Exceptions
 			List<string> errors = new List<string>()
 			{
 				ex.Message,
-				ex.InnerException?.ToString(),
 			};
-
 			return context.Response.WriteAsync(new ExceptionModel
 			{
 				Errors = errors,
@@ -53,7 +53,7 @@ namespace BookingApp.Application.Exceptions
 		private static int GetStatusCode(Exception ex) =>
 			ex switch
 			{
-
+				BaseException => StatusCodes.Status400BadRequest,
 				BadRequestException => StatusCodes.Status400BadRequest,
 				NotFoundException => StatusCodes.Status404NotFound,
 				ValidationException => StatusCodes.Status422UnprocessableEntity,
