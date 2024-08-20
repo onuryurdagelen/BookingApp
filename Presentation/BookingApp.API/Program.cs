@@ -4,12 +4,14 @@ using MediatR;
 using BookingApp.Application;
 using BookingApp.Persistence;
 using BookingApp.Application.Exceptions;
+using BookingApp.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Add services to the container.
 builder.Services.AddApplicationServices();
 // MediatR'ý ekleyin
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(BookingApp.Application.ServiceRegistration).Assembly));
+builder.Services.AddInfrastructures(builder.Configuration);
 builder.Services.AddPersistenceServices();
 // DbContext ve Repository'leri ekleyin.
 builder.Services.AddDbContext<AppDbContext>(options =>
