@@ -55,6 +55,7 @@ namespace BookingApp.Application.Exceptions
 			{
 				BaseException => StatusCodes.Status400BadRequest,
 				BadRequestException => StatusCodes.Status400BadRequest,
+				UnauthorizedException => StatusCodes.Status401Unauthorized,
 				NotFoundException => StatusCodes.Status404NotFound,
 				ValidationException => StatusCodes.Status422UnprocessableEntity,
 				_ => StatusCodes.Status500InternalServerError

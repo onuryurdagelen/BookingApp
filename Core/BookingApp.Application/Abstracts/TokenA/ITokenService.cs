@@ -1,4 +1,5 @@
-﻿using BookingApp.Domain.Entities;
+﻿using BookingApp.Application.Bases.Responses.Token;
+using BookingApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,10 +12,10 @@ namespace BookingApp.Application.Abstracts.TokenA
 {
 	public interface ITokenService
 	{
-		Task<JwtSecurityToken> CreateToken(User user, IList<string> roles);
+		Task<TokenResponse> CreateTokenAsync(User user, IList<string> roles);
 
 		string GenerateRefreshToken();
 
-		ClaimsPrincipal? GetPrincipalFromExpiredToken();
+		ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token);
 	}
 }

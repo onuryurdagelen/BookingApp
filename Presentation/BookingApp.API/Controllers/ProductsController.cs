@@ -2,12 +2,13 @@
 using BookingApp.Application.Queries.Booking.GetAll;
 using BookingApp.Application.Queries.ProductQ.GetAll;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -17,8 +18,8 @@ namespace BookingApp.API.Controllers
 		{
 			_mediator = mediator;
 		}
-
-		[HttpGet("products")]
+		[HttpGet]
+		[Authorize]
 		public async Task<IActionResult> GetProducts()
 		{
 			var response = await _mediator.Send(new GetAllProductQueryRequest());

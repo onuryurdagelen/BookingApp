@@ -27,7 +27,7 @@ namespace BookingApp.Application.Queries.ProductQ.GetAll
 
             //return response;
 
-            throw new Exception("hata mesajı",new Exception { Source = "source" });
+            return response;
         }
     }
 }

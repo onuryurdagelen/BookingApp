@@ -1,6 +1,8 @@
 ﻿using BookingApp.Application.Abstracts.TokenA;
+using BookingApp.Application.Bases.Responses.Token;
 using BookingApp.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +26,7 @@ namespace BookingApp.Infrastructure.Concretes.Token
 			_tokenSettings = options.Value;
         }
 
-        public async Task<JwtSecurityToken> CreateToken(User user, IList<string> roles)
+        public async Task<TokenResponse> CreateTokenAsync(User user, IList<string> roles)
 		{
 			var claims = new List<Claim>()
 			{
@@ -31,7 +34,6 @@ namespace BookingApp.Infrastructure.Concretes.Token
 				new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
 				new Claim(ClaimTypes.Email,user.Email),
 				new Claim(ClaimTypes.Name,user.FullName),
-				new Claim(ClaimTypes.MobilePhone,user.PhoneNumber),
 			};
 			//kullanıcıya ait rolleri claim listesine ekleriz.
             foreach (var role in roles)
@@ -41,7 +43,7 @@ namespace BookingApp.Infrastructure.Concretes.Token
 			//jwt token security key oluşturulur.
 			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.SecretKey));
 
-			var token = new JwtSecurityToken(
+			var jwtSecurityToken = new JwtSecurityToken(
 				issuer:_tokenSettings.Issuer,
 				audience:_tokenSettings.Audience,
 				expires:DateTime.Now.AddMinutes(_tokenSettings.TokenValidityInMinutes),
@@ -51,18 +53,54 @@ namespace BookingApp.Infrastructure.Concretes.Token
 			//ilk token oluşturduğumuzda ilgili kullanıcıya ait claim'leri RoleClaims tablosuna claim'leri ekleme işlemi yaparız.
 			await _userManager.AddClaimsAsync(user,claims);
 
+
+			JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+			string token = handler.WriteToken(jwtSecurityToken);
+
+			string refreshToken = GenerateRefreshToken();
+
 			//son olarak token döndürülür.
-			return token;
+			return new TokenResponse { 
+				AccessToken = token, 
+				RefreshToken = refreshToken, 
+				AccessTokenExpiryDate = DateTime.Now.AddMinutes(_tokenSettings.TokenValidityInMinutes),
+				RefreshTokenExpiryDate = DateTime.Now.AddDays(_tokenSettings.RefreshTokenValidityInDays)
+			};
         }
 
 		public string GenerateRefreshToken()
 		{
-			throw new NotImplementedException();
+			var numberByte = new Byte[32];
+
+			using var randomNumber = RandomNumberGenerator.Create();
+
+			randomNumber.GetBytes(numberByte);
+
+			return Convert.ToBase64String(numberByte);
 		}
 
-		public ClaimsPrincipal? GetPrincipalFromExpiredToken()
+		public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
 		{
-			throw new NotImplementedException();
+			TokenValidationParameters tokenValidationParameters = new TokenValidationParameters()
+			{
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.SecretKey)),
+				ValidateLifetime = true,
+				ValidIssuer = _tokenSettings.Issuer,
+				ValidAudience =_tokenSettings.Audience,
+				ClockSkew = TimeSpan.Zero
+			};
+
+			JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+			var principal = jwtSecurityTokenHandler.ValidateToken(token,tokenValidationParameters,out SecurityToken securityToken);
+
+			if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+				throw new SecurityTokenException("Token not found!");
+
+			return principal;
 		}
 	}
 }
