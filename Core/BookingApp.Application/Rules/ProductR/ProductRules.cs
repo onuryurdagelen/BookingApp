@@ -1,4 +1,5 @@
-﻿using BookingApp.Application.Rules.Product;
+﻿using BookingApp.Application.Bases;
+using BookingApp.Application.Rules.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookingApp.Application.Rules.ProductR
 {
-	public class ProductRules:BaseRules
+    public class ProductRules:BaseRules
 	{
 		public Task ProductTitleMustNotBeSame(string requestTitle, IList<BookingApp.Domain.Entities.Product> products)
 		{

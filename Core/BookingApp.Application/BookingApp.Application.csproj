@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Commands\BookingC\Delete\" />
     <Folder Include="Commands\BookingC\Update\" />
+    <Folder Include="Queries\AuthQ\" />
     <Folder Include="Rules\CategoryR\" />
     <Folder Include="Rules\BookingR\" />
   </ItemGroup>

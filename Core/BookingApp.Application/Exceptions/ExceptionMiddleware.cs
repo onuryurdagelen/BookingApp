@@ -1,4 +1,4 @@
-﻿using BookingApp.Application.Rules;
+﻿using BookingApp.Application.Bases;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookingApp.Application.Exceptions
 {
-	public class ExceptionMiddleware : IMiddleware
+    public class ExceptionMiddleware : IMiddleware
 	{
 		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 		{

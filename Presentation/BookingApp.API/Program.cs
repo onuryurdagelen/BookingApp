@@ -7,6 +7,11 @@ using BookingApp.Application.Exceptions;
 using BookingApp.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+
+
+builder.Services.AddHttpContextAccessor(); ;
+builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+
 // Add services to the container.
 builder.Services.AddApplicationServices();
 // MediatR'ý ekleyin

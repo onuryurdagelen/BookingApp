@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookingApp.Application.Rules
+namespace BookingApp.Application.Commands.AuthC.Register
 {
-	public abstract class BaseRules
+	public class RegisterCommandResponse
 	{
 	}
 }

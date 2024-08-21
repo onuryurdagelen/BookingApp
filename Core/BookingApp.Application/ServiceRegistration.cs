@@ -1,6 +1,6 @@
-﻿using BookingApp.Application.Behavior;
+﻿using BookingApp.Application.Bases;
+using BookingApp.Application.Behavior;
 using BookingApp.Application.Exceptions;
-using BookingApp.Application.Rules;
 using BookingApp.Application.Rules.ProductR;
 using FluentValidation;
 using MediatR;
@@ -18,6 +18,7 @@ namespace BookingApp.Application
     {
        public static void AddApplicationServices(this IServiceCollection services)
         {
+
             var assembly = Assembly.GetExecutingAssembly();
 
             services.AddTransient<ExceptionMiddleware>();
